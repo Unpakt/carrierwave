@@ -119,6 +119,17 @@ end
               it 'should retrieve file name' do
                 @fog_file.filename.should == 'test.jpg'
               end
+
+              context "file does not exist" do
+                before do
+                  @uploader.stub!(:store_path).with('test.jpg').and_return('uploads/unexisting.jpg')
+                  @fog_file = @storage.retrieve!('test.jpg')
+                end
+
+                it "should have zero size" do
+                  @fog_file.size.should be_zero
+                end
+              end
             end
 
             context "when a string" do
